@@ -52,7 +52,7 @@ async def ping_compare(name, ip):
                     requests.get(
                         f'https://api.telegram.org/bot1105929277:AAEHFVKbNdvPHNulpW-ywks8hozFpq3kNco/sendMessage?'
                         f'chat_id=-1001206104553&message_thread_id=619&text=🟢 {name}%20internet%20⬆️%2C%20time%'
-                        f'20elapsed%3A%20{t}')
+                        f'20offline%3A%20{t}')
                 except Exception as err:
                     logger.error(err)
                 ping1 = ping2
