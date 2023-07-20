@@ -15,7 +15,7 @@ hosts = {'11400f': '100.100.220.108',
 
 async def check_ping(ip):
     logger.info(f'Pinging {ip}')
-    process = await asp.create_subprocess_shell("ping -c 10 " + ip)
+    process = await asp.create_subprocess_shell("ping -c 2 " + ip)
     await process.wait()
     exit_code = process.returncode
     logger.info(f'Exit code {exit_code}')
@@ -58,7 +58,7 @@ async def ping_compare(name, ip):
                     logger.error(err)
                 ping1 = ping2
         else:
-            await asyncio.sleep(5)
+            await asyncio.sleep(1)
 
 
 async def main():
