@@ -18,13 +18,12 @@ async def check_ping(ip):
     process = await asp.create_subprocess_shell("ping -c 2 " + ip)
     await process.wait()
     exit_code = process.returncode
-    logger.info(f'Exit code {exit_code}')
     if exit_code == 0:
         pingstatus = "Active"
-        logger.info(pingstatus)
+        logger.info("🟢 " + pingstatus)
     else:
         pingstatus = "Network Error"
-        logger.info(pingstatus)
+        logger.info("🔴 " + pingstatus)
     return pingstatus
 
 
