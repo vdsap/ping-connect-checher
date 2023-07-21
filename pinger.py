@@ -15,7 +15,7 @@ hosts = {'11400f': '100.100.220.108',
 
 async def check_ping(ip):
     logger.info(f'Pinging {ip}')
-    process = await asp.create_subprocess_shell("ping -c 2 " + ip)
+    process = await asp.create_subprocess_shell("ping -c 4 " + ip)
     await process.wait()
     exit_code = process.returncode
     if exit_code == 0:
