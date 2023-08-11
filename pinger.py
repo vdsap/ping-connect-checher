@@ -136,9 +136,9 @@ async def tg_message(started_for_str):
         host_yaml = await host_status_read()
         for name, status in host_yaml.items():
             if status == "Network Error":
-                text_out += f'🔴{name}⬇️\n'
+                text_out += f'🔴 {name} ⬇️\n'
             else:
-                text_out += f'🟢{name}⬆️\n'
+                text_out += f'🟢 {name} ⬆️\n'
         logger.info(requests.get(bot_text_url + f'/editMessageText?chat_id=-1001206104553&'
                                                 f'message_id={edit_pin_message_id}&text={text_out}'))
 
