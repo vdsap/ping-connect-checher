@@ -55,13 +55,26 @@ async def check_ping(ip):
     return pingstatus
 
 
+async def check_ping_tailscale(ip):
+    logger.info(f'Pinging {ip}')
+    process = await asp.create_subprocess_shell("tailscale ping " + ip)
+    await process.wait()
+    exit_code = process.returncode
+    if exit_code == 0:
+        pingstatus = "Active"
+        logger.info("🟢 " + pingstatus)
+    else:
+        pingstatus = "Network Error"
+        logger.info("🔴 " + pingstatus)
+    return pingstatus
+
 async def ping_compare(name, ip):
     global bot_text_url
-    ping1 = await check_ping(ip)
+    ping1 = await check_ping_tailscale(ip)
     timer = datetime.datetime.now()
     await host_status_change(name, ping1)
     while True:
-        ping2 = await check_ping(ip)
+        ping2 = await check_ping_tailscale(ip)
         if ping2 != ping1:
             logger.info('Status changed')
             if ping2 == "Network Error":
