@@ -108,10 +108,13 @@ async def ping_compare(name, ip):
 async def changing_host(tasks):
     global bot_text_url
     logger.info("Hosts changed, restarting")
-    requests.get(
-        f'{bot_text_url}/sendMessage?'
-        f'chat_id=-1001206104553&parse_mode=html&message_thread_id=619&'
-        f'text=❗️File hosts changed❗️, restarting🔄')
+    try:
+        requests.get(
+            f'{bot_text_url}/sendMessage?'
+            f'chat_id=-1001206104553&parse_mode=html&message_thread_id=619&'
+            f'text=❗️File hosts changed❗️, restarting🔄')
+    except Exception as err:
+        logger.error(err)
     for i in tasks:
         i.cancel()
         with contextlib.suppress(asyncio.CancelledError):
@@ -127,22 +130,25 @@ async def tg_message(started_for_str):
     global bot_text_url
     text = 'Hosts status\n'
     text_out = text + '\n'.join(started_for_str)
-    edit_pin_message_id = json.loads(
-        (requests.get(bot_text_url + '/getChat?chat_id=-1001206104553')).text)['result']['pinned_message']
-    if edit_pin_message_id['text'].split('\n')[0] != 'Hosts status':
-        logger.info('pined message not found')
-        edit_pin_message_id = json.loads(requests.get(
-            f"{bot_text_url}/sendMessage?"
-            f"chat_id=-1001206104553&parse_mode=html&message_thread_id=619&text={text_out}").text)['result'][
-            'message_id']
-        logger.debug(f"""Edit_pin_message_id={edit_pin_message_id}""")
-        logger.info(requests.get(
-            f'{bot_text_url}/pinChatMessage?'
-            f'chat_id=-1001206104553&message_id={edit_pin_message_id}&disable_notification=True'))
-        logger.debug('New message pinned')
-    else:
-        logger.debug('Pinned message found')
-        logger.debug(f'Edit_pin_message_id={edit_pin_message_id}')
+    try:
+        edit_pin_message_id = json.loads(
+            (requests.get(bot_text_url + '/getChat?chat_id=-1001206104553')).text)['result']['pinned_message']
+        if edit_pin_message_id['text'].split('\n')[0] != 'Hosts status':
+            logger.info('pined message not found')
+            edit_pin_message_id = json.loads(requests.get(
+                f"{bot_text_url}/sendMessage?"
+                f"chat_id=-1001206104553&parse_mode=html&message_thread_id=619&text={text_out}").text)['result'][
+                'message_id']
+            logger.debug(f"""Edit_pin_message_id={edit_pin_message_id}""")
+            logger.info(requests.get(
+                f'{bot_text_url}/pinChatMessage?'
+                f'chat_id=-1001206104553&message_id={edit_pin_message_id}&disable_notification=True'))
+            logger.debug('New message pinned')
+        else:
+            logger.debug('Pinned message found')
+            logger.debug(f'Edit_pin_message_id={edit_pin_message_id}')
+    except Exception as err:
+        logger.error(err)
     while True:
         text_out = text
         await asyncio.sleep(5)
@@ -152,8 +158,11 @@ async def tg_message(started_for_str):
                 text_out += f'🔴 {name}\n'
             else:
                 text_out += f'🟢 {name}\n'
-        logger.info(requests.get(bot_text_url + f'/editMessageText?chat_id=-1001206104553&'
+        try:
+            logger.info(requests.get(bot_text_url + f'/editMessageText?chat_id=-1001206104553&'
                                                 f'message_id={edit_pin_message_id}&text={text_out}'))
+        except Exception as err:
+            logger.error(err)
 
 
 async def main():
